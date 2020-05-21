@@ -60,13 +60,13 @@ class Fig(object):
         plots = self.plots
         containerId="myplot"
 
-        data = [list(self.df.columns)]
-        data.extend(df.values.tolist())
+        dataDict = self._prepareDataframe(df)
+        # data = [list(self.df.columns)]
+        # data.extend(df.values.tolist())
         # df.to_records(index=False)
 
         template = templateEnv.get_template(TEMPLATE_FILE)
-        # s = template.render(data=data, schema=schema, plotType=plotType, settings=plotSettings, containerId=containerId, axId=axId)
-        s = template.render(data=data, schema=schema, containerId=containerId, axId=axId, plots=plots, figSettings=self.figSettings)
+        s = template.render(dataDict=dataDict, containerId=containerId, plots=plots, figSettings=self.figSettings)
         if filepath is None:
             return s
         else:
