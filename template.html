@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.7.0/echarts.min.js" integrity="sha256-eKrx6Ly6b0Rscx/PSm52rJsvK76RJyv18Toswq+OLSs=" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://echarts.cdn.apache.org/examples/vendors/echarts-stat/ecStat.min.js?_v_=1588792671233"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/ronrest/ezecharts@v0.1.0/ezec.js" charset="utf-8"></script>
+        <title></title>
+    </head>
+    <body>
+        <div id="{{containerId}}" style="width:600px; height:400px;"></div>
+
+        <script type="text/javascript">
+            // -----------------------
+            // DATA
+            // -----------------------
+            var data = {{dataDict.data | tojson}};
+            var schema = {{dataDict.schema}};
+            var df = new DF(data, schema);
+
+            // -----------------------
+            // CONFIGURE FIGURE
+            // -----------------------
+            var fig = new Figure({{figSettings}});
+            fig.setData(df);
+
+            // -----------------------
+            // ADD PLOTS
+            // -----------------------
+            let plotSettings = null;
+            {% for plt in plots %}
+            plotSettings = {{plt.plotSettings}};
+            plotSettings.ax = fig.axes[{{plt.axId}}];
+            {{plt.plotType}}(plotSettings);
+            {% endfor %}
+
+            fig.plot("{{containerId}}");
+        </script>
+    </body>
+</html>
