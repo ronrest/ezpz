@@ -56,7 +56,7 @@ class Fig(object):
         self.df = df
         self.schema = {col:"continuous" for col in df.columns}
 
-    def plot(self, filepath, launch=True):
+    def show(self, filepath, launch=True):
         plots = self.plots
         containerId="myplot"
 
