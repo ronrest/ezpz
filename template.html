@@ -24,6 +24,11 @@
             var fig = new Figure({{figSettings}});
             fig.setData(df);
 
+
+            {% for op in operations %}
+            fig.{{op.kind}}(...{{op.args}}, {{op.kwargs}})
+            {% endfor %}
+
             // -----------------------
             // ADD PLOTS
             // -----------------------

@@ -51,22 +51,30 @@ class Fig(object):
         self.df = None
         self.plots = []
         self.operations = []
+        self.containerId="myplot"
 
     def setData(self, df):
         self.df = df
         self.schema = {col:"continuous" for col in df.columns}
 
+    def linkAxisPointers(self, axIndices, side="both", **kwargs):
+        # TODO: do dummy checking
+        self.operations.append(dict(
+            kind="linkAxisPointers",
+            args=[axIndices, side],
+            kwargs= kwargs,
+            ))
+
     def show(self, filepath, launch=True):
-        plots = self.plots
-        containerId="myplot"
 
+        # DATA
         dataDict = self._prepareDataframe(df)
-        # data = [list(self.df.columns)]
-        # data.extend(df.values.tolist())
-        # df.to_records(index=False)
 
+        # TEMPLATE
         template = templateEnv.get_template(TEMPLATE_FILE)
-        s = template.render(dataDict=dataDict, containerId=containerId, plots=plots, figSettings=self.figSettings)
+        s = template.render(dataDict=dataDict, containerId=self.containerId, plots=self.plots, figSettings=self.figSettings, operations=self.operations)
+
+        # SAVE OR RETURN
         if filepath is None:
             return s
         else:
@@ -81,4 +89,3 @@ class Fig(object):
         schema = {col:"continuous" for col in df.columns}
         dff = {"data": data, "schema": schema}
         return dff
-
