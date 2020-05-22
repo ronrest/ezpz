@@ -58,6 +58,7 @@ class Fig(object):
         self.schema = {col:"continuous" for col in df.columns}
 
     def linkAxisPointers(self, axIndices, side="both", **kwargs):
+        assert side in {"x", "y", "both"}, "`side` argument to fig.linkAxisPointers() must be one of 'x', 'y' or 'both'"
         # TODO: do dummy checking
         self.operations.append(dict(
             kind="linkAxisPointers",
@@ -78,6 +79,7 @@ class Fig(object):
             indice: (list of ints) Axes indices
         """
         # TODO: do dummy checking
+        assert side in {"x", "y", "both"}, "`side` argument to fig.syncRange() must be one of 'x', 'y' or 'both'"
         self.operations.append(dict(
         kind="_createSyncRangeFlags",
         args=[side, indices],
