@@ -41,6 +41,29 @@ class Axes(object):
         options["plotSettings"] = dict(x=x, y=y)
         self.fig.plots.append(options)
 
+    def scatterplot(self, x, y, df=None, **kwargs):
+        return scatterplot(x=x, y=y, df=df, ax=self, **kwargs)
+
+
+def scatterplot(x, y, df=None, ax=None, **kwargs):
+    options = {}
+
+    if ax is None:
+        assert df is not None, "If no ax object is specified, then you must pass `df`"
+        fig = Fig()
+        ax = fig.axes[0]
+        fig.setData(df)
+    else:
+        fig = ax.fig
+        if df is not None:
+            options["df"] = prepareJSDataframe(df)
+
+    options["plotType"] = "scatterplot"
+    options["axId"] = ax.axesId
+    options["plotSettings"] = dict(x=x, y=y)
+    fig.plots.append(options)
+    return fig, ax
+
 
 class Fig(object):
     def __init__(self, grid=None, **kwargs):
