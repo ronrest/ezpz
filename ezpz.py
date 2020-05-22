@@ -87,17 +87,28 @@ class Fig(object):
         ))
 
     def addXdataSlider(self, axIndices=(0,), **kwargs):
+        """ Add a slider to zoom in and out at different ranges of the data.
+            Same as addDataSlider(axIndices, side="x", **kwargs)
+            See addDataSlider() for details on the arguments
+        """
         self.addDataSlider(axIndices=axIndices, side="x", **kwargs)
 
     def addYdataSlider(self, axIndices=(0,), **kwargs):
+        """ Add a slider to zoom in and out at different ranges of the data.
+            Same as addDataSlider(axIndices, side="y", **kwargs)
+            See addDataSlider() for details on the arguments
+        """
         self.addDataSlider(axIndices=axIndices, side="y", **kwargs)
 
     def addDataSlider(self, axIndices=(0,), side="x", **kwargs):
         """ Add a slider to zoom in and out at different ranges of the data.
         Args:
-            side:       (str) which axis to "x", "y", "both" (default="x")
             axIndices:  (list of ints) indices of axes that will be affected by
                         the slider. ( default = [0] )
+            side:       (str) which axis to "x", "y", "both" (default="x")
+            **kwargs    aditional keyword arguments to be passed to the
+                        javascript function.
+                        TODO: list of aditional argument that can be used
         """
         assert side in {"x", "y", "both"}, "`side` argument to fig.addDataSlider() must be one of 'x', 'y' or 'both'"
         kwargs.update(dict(axes=list(axIndices)))
