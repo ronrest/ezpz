@@ -65,6 +65,26 @@ class Fig(object):
             kwargs= kwargs,
             ))
 
+    def syncXrange(self, indices):
+        self.syncRange(side="x", indices=indices)
+
+    def syncYrange(self, indices):
+        self.syncRange(side="y", indices=indices)
+
+    def syncRange(self, side, indices):
+        """
+        Args:
+            side:   (str)one of "x", "y", "both"
+            indice: (list of ints) Axes indices
+        """
+        # TODO: do dummy checking
+        self.operations.append(dict(
+        kind="_createSyncRangeFlags",
+        args=[side, indices],
+        kwargs= {},
+        ))
+
+
     def show(self, filepath, launch=True):
 
         # DATA
