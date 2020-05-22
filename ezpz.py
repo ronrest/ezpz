@@ -66,13 +66,13 @@ class Fig(object):
             kwargs= kwargs,
             ))
 
-    def syncXrange(self, indices):
-        self.syncRange(side="x", indices=indices)
+    def syncXrange(self, axIndices):
+        self.syncRange(side="x", axIndices=axIndices)
 
-    def syncYrange(self, indices):
-        self.syncRange(side="y", indices=indices)
+    def syncYrange(self, axIndices):
+        self.syncRange(side="y", axIndices=axIndices)
 
-    def syncRange(self, side, indices):
+    def syncRange(self, axIndices, side):
         """
         Args:
             side:   (str)one of "x", "y", "both"
@@ -82,7 +82,7 @@ class Fig(object):
         assert side in {"x", "y", "both"}, "`side` argument to fig.syncRange() must be one of 'x', 'y' or 'both'"
         self.operations.append(dict(
         kind="_createSyncRangeFlags",
-        args=[side, indices],
+        args=[side, axIndices],
         kwargs= {},
         ))
 
