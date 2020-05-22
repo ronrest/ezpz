@@ -86,6 +86,26 @@ class Fig(object):
         kwargs= {},
         ))
 
+    def addXdataSlider(self, axIndices=(0,), **kwargs):
+        self.addDataSlider(axIndices=axIndices, side="x", **kwargs)
+
+    def addYdataSlider(self, axIndices=(0,), **kwargs):
+        self.addDataSlider(axIndices=axIndices, side="y", **kwargs)
+
+    def addDataSlider(self, axIndices=(0,), side="x", **kwargs):
+        """ Add a slider to zoom in and out at different ranges of the data.
+        Args:
+            side:       (str) which axis to "x", "y", "both" (default="x")
+            axIndices:  (list of ints) indices of axes that will be affected by
+                        the slider. ( default = [0] )
+        """
+        assert side in {"x", "y", "both"}, "`side` argument to fig.addDataSlider() must be one of 'x', 'y' or 'both'"
+        kwargs.update(dict(axes=list(axIndices)))
+        self.operations.append(dict(
+            kind="addDataSlider",
+            args=[side],
+            kwargs= kwargs,
+            ))
 
     def show(self, filepath, launch=True):
 
