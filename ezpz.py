@@ -203,6 +203,18 @@ def barplot(x, y, df=None, ax=None, **kwargs):
     return figaxXYplotBuilder(kind="barplot", x=x, y=y, df=df, ax=ax, **kwargs)
 
 
+def histogram(x, df=None, binMethod="squareRoot", showItemLabel=False, ax=None, **kwargs):
+    """ Creates a histogram
+    Args:
+        x               (str) name of column containing data you want to plot
+        binMethod:      (str) Controls how the bins are calculated. one of:
+                              "squareRoot", "scott", "freedmanDiaconis", "sturges"
+        showItemLabel: (bool) show the labels for each of the bars?
+        ax:             Axes object to put the plot into.
+    """
+    return figaxXYplotBuilder(kind="histogram", x=x, df=df, ax=ax, binMethod=binMethod, showItemLabel=showItemLabel, **kwargs)
+
+
 # ##############################################################################
 #                                 DF FUNCTIONS
 # ##############################################################################
