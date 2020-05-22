@@ -34,7 +34,7 @@ class Axes(object):
     def lineplot(self, x, y, df=None, **kwargs):
         options = {}
         if df is not None:
-            options[df] = prepareDataframe(df)
+            options["df"] = prepareJSDataframe(df)
 
         options["plotType"] = "lineplot"
         options["axId"] = self.axesId
@@ -152,8 +152,15 @@ class Fig(object):
 
 
     def _prepareDataframe(self, df):
-        data = [list(self.df.columns)]
-        data.extend(df.values.tolist())
-        schema = {col:"continuous" for col in df.columns}
-        dff = {"data": data, "schema": schema}
-        return dff
+        return prepareJSDataframe(df)
+
+
+# ##############################################################################
+#                                 FUNCTIONS
+# ##############################################################################
+def prepareJSDataframe(df):
+    data = [list(df.columns)]
+    data.extend(df.values.tolist())
+    schema = {col:"continuous" for col in df.columns}
+    dff = {"data": data, "schema": schema}
+    return dff
