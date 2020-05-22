@@ -37,6 +37,9 @@ class Axes(object):
     def scatterplot(self, x, y, df=None, **kwargs):
         return scatterplot(x=x, y=y, df=df, ax=self, **kwargs)
 
+    def barplot(self, x, y, df=None, **kwargs):
+        return barplot(x=x, y=y, df=df, ax=self, **kwargs)
+
 
 class Fig(object):
     def __init__(self, grid=None, **kwargs):
@@ -181,6 +184,10 @@ def scatterplot(x, y, df=None, ax=None, **kwargs):
 
 def lineplot(x, y, df=None, ax=None, **kwargs):
     return figaxXYplotBuilder(kind="lineplot", x=x, y=y, df=df, ax=ax, **kwargs)
+
+
+def barplot(x, y, df=None, ax=None, **kwargs):
+    return figaxXYplotBuilder(kind="barplot", x=x, y=y, df=df, ax=ax, **kwargs)
 
 
 # ##############################################################################
