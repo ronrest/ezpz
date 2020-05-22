@@ -1,7 +1,11 @@
-import pandas as pd
-import jinja2
-import numpy as np
+import os
+import time
 import webbrowser
+
+import pandas as pd
+import numpy as np
+import jinja2
+
 
 # ##############################################################################
 #                                   SETTINGS
@@ -118,7 +122,14 @@ class Fig(object):
             kwargs= kwargs,
             ))
 
-    def show(self, filepath, launch=True):
+    def show(self, filepath, launch=True, temp=False, temp_delay=5):
+        """
+        Args:
+            temp:   (bool) if set to True, then the file will be deleted as soon
+                    as it is launched (hence temporary file)
+            temp_delay: (float) how many seconds to wait before deleting the
+                    file.
+        """
 
         # DATA
         dataDict = self._prepareDataframe(df)
@@ -135,6 +146,10 @@ class Fig(object):
                 fob.write(s)
             if launch:
                 webbrowser.open_new_tab(filepath)
+            if temp:
+                time.sleep(temp_delay)
+                os.remove(filepath)
+
 
     def _prepareDataframe(self, df):
         data = [list(self.df.columns)]
