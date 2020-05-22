@@ -183,8 +183,16 @@ def figaxXYplotBuilder(kind, x, y=None, df=None, ax=None, **kwargs):
     return fig, ax
 
 
-def scatterplot(x, y, df=None, ax=None, **kwargs):
-    return figaxXYplotBuilder(kind="scatterplot", x=x, y=y, df=df, ax=ax, **kwargs)
+def scatterplot(x, y, df=None, ax=None, pointSize=5, **kwargs):
+    """
+    Args:
+        x  (str) name of column to use for x axis
+        y  (str) name of column to use for y axis
+        ax: Axes object to put the plot into.
+        symbolSize  (float) size of the points
+    """
+    symbolSize = pointSize
+    return figaxXYplotBuilder(kind="scatterplot", x=x, y=y, df=df, ax=ax, symbolSize=symbolSize, **kwargs)
 
 
 def lineplot(x, y, df=None, ax=None, **kwargs):
