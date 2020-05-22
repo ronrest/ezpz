@@ -34,7 +34,7 @@
             // -----------------------
             let plotSettings = null;
             {% for plt in plots %}
-            plotSettings = {{plt.plotSettings}};
+            plotSettings = {{plt.plotSettings | tojson}};
             plotSettings.ax = fig.axes[{{plt.axId}}];
             {{plt.plotType}}(plotSettings);
             {% endfor %}
