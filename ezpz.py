@@ -182,8 +182,16 @@ class Fig(object):
 #                                 FUNCTIONS
 # ##############################################################################
 def prepareJSDataframe(df):
-    data = [list(df.columns)]
-    data.extend(df.values.tolist())
     schema = {col:"continuous" for col in df.columns}
+    data = [list(df.columns)] # header row
+
+    # Convert rest of rows to list of lists
+    # data.extend(df.values.tolist())
+
+    # Convert np.NaNs to Nones - Because Echarts does not like NaN objects,
+    # but it can handle nulls
+    # Then convert to a list of lists
+    data.extend(np.where(np.isnan(df), None, df).tolist())
+
     dff = {"data": data, "schema": schema}
     return dff
