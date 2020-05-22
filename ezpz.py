@@ -157,7 +157,7 @@ class Fig(object):
 # ##############################################################################
 #                                 PLOT FUNCTIONS
 # ##############################################################################
-def figaxXYplotBuilder(kind, x, y, df=None, ax=None, **kwargs):
+def figaxXYplotBuilder(kind, x, y=None, df=None, ax=None, **kwargs):
     """ A generic function for building 2d XY plots """
     options = {}
 
@@ -173,7 +173,12 @@ def figaxXYplotBuilder(kind, x, y, df=None, ax=None, **kwargs):
 
     options["plotType"] = kind
     options["axId"] = ax.axesId
-    options["plotSettings"] = dict(x=x, y=y)
+
+    if y is None:
+        options["plotSettings"] = dict(x=x, **kwargs)
+    else:
+        options["plotSettings"] = dict(x=x, y=y, **kwargs)
+
     fig.plots.append(options)
     return fig, ax
 
