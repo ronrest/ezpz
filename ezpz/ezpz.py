@@ -50,7 +50,15 @@ class Axes(object):
 
 
 class Fig(object):
-    def __init__(self, grid=None, df=None, **kwargs):
+    def __init__(self, grid=(1,1), df=None, title="", subtitle="", **kwargs):
+        """
+        Args:
+            grid:       (tuple of 2 ints) (nRows, nCols) (default = (1,1))
+            df:         (pandas dataframe) default data to use for plots
+            title:      (str)
+            subtitle:   (str)
+            **kwargs:   aditional keyword arguments for figure options
+        """
         self.figSettings = kwargs
         self.n_axes = 1
         if grid is not None:
@@ -66,6 +74,9 @@ class Fig(object):
             self.df = None
             self.schema = {}
 
+        self.figSettings["title"] = title
+        self.figSettings["subtitle"] = subtitle
+
         self.plots = []
         self.operations = []
         self.containerId="myplot"
@@ -74,6 +85,10 @@ class Fig(object):
         self.df = df
         # self.schema = {col:"continuous" for col in df.columns}
         self.schema = createSchema(df, schema=schema)
+
+    def setTitle(self, title=None, subtitle=None):
+        self.figSettings["title"] = title if title is not None else self.figSettings["title"]
+        self.figSettings["subtitle"] = subtitle if subtitle is not None else self.figSettings["subtitle"]
 
     def linkAxisPointers(self, axIndices, side="both", **kwargs):
         assert side in {"x", "y", "both"}, "`side` argument to fig.linkAxisPointers() must be one of 'x', 'y' or 'both'"
@@ -167,7 +182,13 @@ class Fig(object):
 
         # TEMPLATE
         template = templateEnv.get_template(TEMPLATE_FILENAME)
-        s = template.render(dataDict=dataDict, containerId=self.containerId, plots=self.plots, figSettings=self.figSettings, operations=self.operations, figsize=figsize)
+        s = template.render(
+            dataDict=dataDict,
+            containerId=self.containerId,
+            plots=self.plots,
+            figSettings=self.figSettings,
+            operations=self.operations,
+            figsize=figsize)
 
         # SAVE OR RETURN
         if filepath is None:
