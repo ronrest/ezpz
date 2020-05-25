@@ -1,10 +1,12 @@
 import os
 import time
 import webbrowser
+import json
 
 import pandas as pd
 import numpy as np
 import jinja2
+import datetime
 
 
 # ##############################################################################
@@ -150,6 +152,9 @@ class Fig(object):
         figsize = list(figsize)
         figsize[0] = figsize[0] if isinstance(figsize[0], str) else f"{figsize[0]}px"
         figsize[1] = figsize[1] if isinstance(figsize[1], str) else f"{figsize[1]}px"
+
+        # JSONIFY DATA
+        dataDict["data"] = json.dumps(dataDict["data"], default=myJSONpreprocessor)
 
         # TEMPLATE
         template = templateEnv.get_template(TEMPLATE_FILE)
@@ -302,3 +307,10 @@ def createSchema(df, schema={}):
     """
     schema = {col:schema.get(col, "continuous") for col in df.columns}
     return schema
+
+
+def myJSONpreprocessor(x):
+    if isinstance(x, datetime.datetime):
+        return x.__str__()
+    else:
+        return x
