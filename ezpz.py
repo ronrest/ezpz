@@ -40,6 +40,9 @@ class Axes(object):
     def barplot(self, x, y, df=None, **kwargs):
         return barplot(x=x, y=y, df=df, ax=self, **kwargs)
 
+    def stepplot(self, x, y, stepType="end", df=None, **kwargs):
+        return stepplot(x=x, y=y, stepType="end", df=df, ax=self, **kwargs)
+
 
 class Fig(object):
     def __init__(self, grid=None, **kwargs):
@@ -201,6 +204,25 @@ def lineplot(x, y, df=None, ax=None, **kwargs):
 
 def barplot(x, y, df=None, ax=None, **kwargs):
     return figaxXYplotBuilder(kind="barplot", x=x, y=y, df=df, ax=ax, **kwargs)
+
+def stepplot(x, y, stepType="end", df=None, ax=None, **kwargs):
+    """ Create a step plot
+    Args:
+        x:          (str) name of column to use for x axis
+        y:          (str) name of column to use for y axis
+        stepType:   (str) When the change in value occurs
+                    one of "start", "end", "middle"
+        df:         (None of Pandas Dataframe) dataframe to use, if not using
+                    the default one for the figure.
+        ax:         (Axes object) which axes object to use.
+                    if None, then it will create a new figure, and axes object.
+        **kwargs:   Aditional keyword-argument pairs to pass.
+
+    Returns:
+        fig, ax : figure, and axes object where this plot is plotted to.
+    """
+    assert stepType.lower() in {"start", "end", "middle"}, 'stepType argument for stepplot() must be one of ["start", "end", "middle"]'
+    return figaxXYplotBuilder(kind="stepplot", x=x, y=y, df=df, ax=ax, **kwargs)
 
 
 def histogram(x, df=None, binMethod="squareRoot", showItemLabel=False, ax=None, **kwargs):
