@@ -181,7 +181,17 @@ class Fig(object):
 #                                 PLOT FUNCTIONS
 # ##############################################################################
 def figaxXYplotBuilder(kind, x, y=None, df=None, ax=None, **kwargs):
-    """ A generic function for building 2d XY plots """
+    """ A generic function for building 2d XY plots
+
+    Args:
+        **kwargs:
+            color
+            symbolSize
+            showXticks
+            showYticks
+            showXticklabels
+            showYticklabels
+    """
     options = {}
 
     if ax is None:
