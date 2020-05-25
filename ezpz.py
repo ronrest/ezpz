@@ -260,6 +260,16 @@ def histogram(x, df=None, binMethod="squareRoot", showItemLabel=False, ax=None, 
 # ##############################################################################
 #                                 DF FUNCTIONS
 # ##############################################################################
+def myJSONpreprocessor(x):
+    """ preprocessor function for json.dumps() to convert different kinds of
+        datatypes into a JSON serializable format.
+    """
+    if isinstance(x, datetime.datetime):
+        return x.__str__()
+    else:
+        return x
+
+
 def prepareJSDataframe(df, schema={}):
     """ Convert a pandas data frame to a format that can be read properly by
         the javascript DataFrame class in ezecharts.
@@ -322,10 +332,3 @@ def createSchema(df, schema={}):
         else:
             schema[col] = "categorical"
     return schema
-
-
-def myJSONpreprocessor(x):
-    if isinstance(x, datetime.datetime):
-        return x.__str__()
-    else:
-        return x
