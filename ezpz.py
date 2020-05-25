@@ -59,9 +59,10 @@ class Fig(object):
         self.operations = []
         self.containerId="myplot"
 
-    def setData(self, df):
+    def setData(self, df, schema={}):
         self.df = df
-        self.schema = {col:"continuous" for col in df.columns}
+        # self.schema = {col:"continuous" for col in df.columns}
+        self.schema = createSchema(df, schema=schema)
 
     def linkAxisPointers(self, axIndices, side="both", **kwargs):
         assert side in {"x", "y", "both"}, "`side` argument to fig.linkAxisPointers() must be one of 'x', 'y' or 'both'"
@@ -134,7 +135,7 @@ class Fig(object):
         """
 
         # DATA
-        dataDict = self._prepareDataframe(df)
+        dataDict = self._prepareDataframe(self.df, schema=self.schema)
 
         # TEMPLATE
         template = templateEnv.get_template(TEMPLATE_FILE)
@@ -153,8 +154,8 @@ class Fig(object):
                 os.remove(filepath)
 
 
-    def _prepareDataframe(self, df):
-        return prepareJSDataframe(df)
+    def _prepareDataframe(self, df, schema={}):
+        return prepareJSDataframe(df, schema)
 
 
 # ##############################################################################
@@ -240,8 +241,19 @@ def histogram(x, df=None, binMethod="squareRoot", showItemLabel=False, ax=None, 
 # ##############################################################################
 #                                 DF FUNCTIONS
 # ##############################################################################
-def prepareJSDataframe(df):
-    schema = {col:"continuous" for col in df.columns}
+def prepareJSDataframe(df, schema={}):
+    """ Convert a pandas data frame to a format that can be read properly by
+        the javascript DataFrame class in ezecharts.
+
+    Args:
+        df:     (pandas dataframe)
+        schema: (dict) key-value mapping from column names to datatype
+                to be used by ezecharts dataframe class for each column.
+                If nothing is passed for this argument, it will TRY to determine
+                an appropirate datatype automatically (same for any columns not
+                included in the schema dictionay if you pass one.)
+    """
+    schema = createSchema(df, schema=schema)
     data = [list(df.columns)] # header row
 
     # Convert rest of rows to list of lists
@@ -250,7 +262,29 @@ def prepareJSDataframe(df):
     # Convert np.NaNs to Nones - Because Echarts does not like NaN objects,
     # but it can handle nulls
     # Then convert to a list of lists
-    data.extend(np.where(np.isnan(df), None, df).tolist())
+    # data.extend(np.where(np.isnan(df), None, df).tolist()) # This method fails for strings
+    data.extend(df.where(pd.notnull(df), None).values.tolist())
 
     dff = {"data": data, "schema": schema}
     return dff
+
+
+def createSchema(df, schema={}):
+    """ Create the schema for ezecharts dataframe from a pandas dataframe.
+        You can optionally pass your own schema, for all or some of the columns,
+        and these values will be used. It will try to determine an appropriate
+        datatype for each other column automatically.
+
+    Args:
+        df:     (pandas dataframe)
+        schema: (dict) key-value mapping from column names to datatype
+                to be used by ezecharts dataframe class for each column.
+                If nothing is passed for this argument, it will TRY to determine
+                an appropirate datatype automatically (same for any columns not
+                included in the schema dictionay if you pass one.)
+
+                datatypes available:
+                    categorical, continuous, time, string
+    """
+    schema = {col:schema.get(col, "continuous") for col in df.columns}
+    return schema
