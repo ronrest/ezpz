@@ -125,9 +125,18 @@ class Fig(object):
             kwargs= kwargs,
             ))
 
-    def show(self, filepath, launch=True, temp=False, temp_delay=5):
+    def show(self, filepath, figsize=(), launch=True, temp=False, temp_delay=5):
         """
         Args:
+            filepath:   (str) where the output HTML file will be saved
+            figsize:    (tuple of 2 strings) dimensions of the figure on the page.
+                        if integer values are passed, then it will interpret as
+                        pixel dimensions.
+                        But you can pass strings that would be valid in html for
+                        setting width and height of a DIV element.
+                        eg: ("100%", "50%") or ("400pt", "300pt") or ("400px", "300px")
+            launch:     (bool) should it automatically launch a new browser tab
+                        to view the plot? (default=True)
             temp:   (bool) if set to True, then the file will be deleted as soon
                     as it is launched (hence temporary file)
             temp_delay: (float) how many seconds to wait before deleting the
@@ -137,9 +146,14 @@ class Fig(object):
         # DATA
         dataDict = self._prepareDataframe(self.df, schema=self.schema)
 
+        # FIGSIZE (convert to pixels string if numbers are provided )
+        figsize = list(figsize)
+        figsize[0] = figsize[0] if isinstance(figsize[0], str) else f"{figsize[0]}px"
+        figsize[1] = figsize[1] if isinstance(figsize[1], str) else f"{figsize[1]}px"
+
         # TEMPLATE
         template = templateEnv.get_template(TEMPLATE_FILE)
-        s = template.render(dataDict=dataDict, containerId=self.containerId, plots=self.plots, figSettings=self.figSettings, operations=self.operations)
+        s = template.render(dataDict=dataDict, containerId=self.containerId, plots=self.plots, figSettings=self.figSettings, operations=self.operations, figsize=figsize)
 
         # SAVE OR RETURN
         if filepath is None:
