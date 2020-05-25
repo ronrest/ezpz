@@ -12,12 +12,15 @@ import datetime
 # ##############################################################################
 #                                   SETTINGS
 # ##############################################################################
-TEMPLATE_FILE = "template.html"
+TEMPLATE_FILENAME = "template.html"
+TEMPLATE_DIRPATH = os.path.dirname(os.path.abspath(__file__))
+
 
 # ##############################################################################
 #                                   SETUP
 # ##############################################################################
-templateLoader = jinja2.FileSystemLoader(searchpath="./")
+# templateLoader = jinja2.FileSystemLoader(searchpath="./")
+templateLoader = jinja2.FileSystemLoader(searchpath=TEMPLATE_DIRPATH)
 templateEnv = jinja2.Environment(loader=templateLoader)
 
 
@@ -47,7 +50,7 @@ class Axes(object):
 
 
 class Fig(object):
-    def __init__(self, grid=None, **kwargs):
+    def __init__(self, grid=None, df=None, **kwargs):
         self.figSettings = kwargs
         self.n_axes = 1
         if grid is not None:
@@ -56,7 +59,13 @@ class Fig(object):
 
         self.axes = [Axes(self, id) for id in range(self.n_axes)]
 
-        self.df = None
+        # DEFAULT DATA
+        if df is not None:
+            self.setData(df)
+        else:
+            self.df = None
+            self.schema = {}
+
         self.plots = []
         self.operations = []
         self.containerId="myplot"
@@ -127,7 +136,7 @@ class Fig(object):
             kwargs= kwargs,
             ))
 
-    def show(self, filepath, figsize=(), launch=True, temp=False, temp_delay=5):
+    def show(self, filepath, figsize=(600, 400), launch=True, temp=False, temp_delay=5):
         """
         Args:
             filepath:   (str) where the output HTML file will be saved
@@ -157,7 +166,7 @@ class Fig(object):
         dataDict["data"] = json.dumps(dataDict["data"], default=myJSONpreprocessor)
 
         # TEMPLATE
-        template = templateEnv.get_template(TEMPLATE_FILE)
+        template = templateEnv.get_template(TEMPLATE_FILENAME)
         s = template.render(dataDict=dataDict, containerId=self.containerId, plots=self.plots, figSettings=self.figSettings, operations=self.operations, figsize=figsize)
 
         # SAVE OR RETURN
