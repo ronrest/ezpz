@@ -305,7 +305,22 @@ def createSchema(df, schema={}):
                 datatypes available:
                     categorical, continuous, time, string
     """
-    schema = {col:schema.get(col, "continuous") for col in df.columns}
+    # If is specified manually in schema, then use that dtype
+    # else try to use a known datatype, otherwise assign it as
+    # a categorical datatype to be safe.
+    for col in df.columns:
+        if col in schema:
+            continue
+        elif pd.api.types.is_numeric_dtype(df[col]):
+            schema[col] = "continuous"
+        elif pd.api.types.is_categorical_dtype(df[col]):
+            schema[col] = "categorical"
+        elif pd.api.types.is_datetime64_dtype(df[col]):
+            schema[col] = "time"
+        elif pd.api.types.is_bool_dtype(df[col]):
+            schema[col] = "categorical"
+        else:
+            schema[col] = "categorical"
     return schema
 
 
